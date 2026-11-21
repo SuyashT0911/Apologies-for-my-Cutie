@@ -529,29 +529,126 @@
 
 <script>
 /* ════════════════════════════════════════
-   NOTIFICATION CONFIGURATION
+   NOTIFICATION & LIVE TRACKING CONFIGURATION
 ════════════════════════════════════════ */
-// ntfy.sh provides instant free push notifications to your phone!
-// Open https://ntfy.sh/cutie-said-yes-suyash on your phone to subscribe
 const NOTIFY_TOPIC = "cutie-said-yes-suyash";
 const NOTIFY_EMAIL = "tiwarisuyash700+s@gmail.com";
 
-function sendYesNotification() {
-  const timeStr = new Date().toLocaleTimeString();
-  const msg = `🎉 CUTIE SAID YES! 💕\n\nCutie clicked "Yes!" on your apology website at ${timeStr}!\nShe attempted clicking "No" ${noAttempts} times before saying Yes 🥺💖`;
+const PAGE_NAMES = {
+  1: "Landing (Envelope)",
+  2: "Apology Letter",
+  3: "Why I Miss You (6 Reasons)",
+  4: "Tic-Tac-Toe Game",
+  5: "Scratch Cards",
+  6: "Secret Starry Message",
+  7: "The Big Question (Yes/No)",
+  8: "Grand YES Celebration 🎉"
+};
 
-  // 1. Instant Push Notification via ntfy.sh (No account or app install required, works in browser too!)
+let maxPageReached = 1;
+let sessionStartTime = Date.now();
+let hasSaidYes = false;
+let exitReported = false;
+let trackedMilestones = new Set();
+
+// Reliable ntfy.sh sender using JSON POST (completely avoids HTTP header encoding errors)
+function sendNtfyNotification({ title, message, priority = 3, tags = [] }) {
   try {
-    fetch(`https://ntfy.sh/${NOTIFY_TOPIC}`, {
+    fetch("https://ntfy.sh", {
       method: "POST",
-      headers: {
-        "Title": "🎉 Cutie Said YES! 💖",
-        "Priority": "urgent",
-        "Tags": "tada,heart,couple"
-      },
-      body: msg
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic: NOTIFY_TOPIC,
+        title: title,
+        message: message,
+        priority: priority,
+        tags: tags
+      }),
+      keepalive: true
     }).catch(() => {});
   } catch(e) {}
+}
+
+// Track user progress through each step
+function trackProgress(page, customDetail) {
+  if (page > maxPageReached) maxPageReached = page;
+
+  // Avoid spamming duplicate pings for the same page
+  const milestoneKey = `page_${page}_${customDetail || ''}`;
+  if (trackedMilestones.has(milestoneKey)) return;
+  trackedMilestones.add(milestoneKey);
+
+  const pageName = PAGE_NAMES[page] || `Page ${page}`;
+  const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
+  const timeStr = elapsed < 60 ? `${elapsed}s` : `${Math.floor(elapsed/60)}m ${elapsed%60}s`;
+
+  sendNtfyNotification({
+    title: `[Step ${page}/8] ${pageName}`,
+    message: `${customDetail || `Cutie reached ${pageName}!`}\n⏱ Time on site: ${timeStr} (Max: ${maxPageReached}/8)`,
+    priority: page === 8 ? 5 : 3,
+    tags: page === 8 ? ["tada", "heart"] : (page === 7 ? ["question", "eyes"] : ["sparkles", "point_right"])
+  });
+}
+
+// Detect when user leaves or closes tab without finishing
+function reportExit() {
+  if (hasSaidYes || exitReported) return;
+  exitReported = true;
+
+  const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
+  const timeStr = elapsed < 60 ? `${elapsed}s` : `${Math.floor(elapsed/60)}m ${elapsed%60}s`;
+
+  sendNtfyNotification({
+    title: `[Left Website] Reached Page ${maxPageReached}/8`,
+    message: `Cutie left or minimized the website.\nFurthest stage reached: Page ${maxPageReached} (${PAGE_NAMES[maxPageReached] || ''})\nTotal time spent: ${timeStr}\nNo attempts: ${noAttempts}`,
+    priority: 4,
+    tags: ["wave", "door"]
+  });
+
+  // Also send an email summary if she opened the letter and spent at least 15s
+  if (NOTIFY_EMAIL && maxPageReached >= 2 && elapsed >= 15) {
+    try {
+      fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          _subject: `👀 Cutie was on the website! Reached Page ${maxPageReached}/8`,
+          status: "Left website before saying Yes",
+          furthestPage: `Page ${maxPageReached} - ${PAGE_NAMES[maxPageReached]}`,
+          timeSpent: timeStr,
+          noAttempts: noAttempts,
+          message: `Cutie visited your apology website and made it up to Page ${maxPageReached} (${PAGE_NAMES[maxPageReached]}).`
+        }),
+        keepalive: true
+      }).catch(() => {});
+    } catch(e) {}
+  }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    reportExit();
+  } else {
+    exitReported = false; // re-arm if she comes back
+  }
+});
+window.addEventListener("pagehide", reportExit);
+
+// Final Yes Notification
+function sendYesNotification() {
+  hasSaidYes = true;
+  const timeStr = new Date().toLocaleTimeString();
+  const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
+  const durationStr = elapsed < 60 ? `${elapsed} seconds` : `${Math.floor(elapsed/60)} min ${elapsed%60} sec`;
+  const msg = `🎉 CUTIE SAID YES! 💕\n\nCutie clicked "Yes!" on your apology website at ${timeStr}!\nShe attempted clicking "No" ${noAttempts} times before saying Yes 🥺💖\nTotal time on site: ${durationStr}\nShe completed all 8 pages!`;
+
+  // 1. Instant Push Notification via ntfy.sh (Priority 5 = loud ring / alarm on phone)
+  sendNtfyNotification({
+    title: "🎉 Cutie Said YES! 💖",
+    message: msg,
+    priority: 5,
+    tags: ["tada", "heart", "couple", "ring"]
+  });
 
   // 2. Email Notification via FormSubmit
   if (NOTIFY_EMAIL) {
@@ -565,9 +662,12 @@ function sendYesNotification() {
         body: JSON.stringify({
           _subject: "🎉 Cutie Said YES! 💕 She accepted your apology!",
           time: timeStr,
+          totalDuration: durationStr,
           noAttempts: noAttempts,
+          pagesCompleted: "8 / 8",
           message: "Cutie just accepted your apology on the website!"
-        })
+        }),
+        keepalive: true
       }).catch(() => {});
     } catch(e) {}
   }
@@ -610,7 +710,7 @@ function updateDots(n) {
 }
 
 /* ════════════════════════════════════════
-   PAGE NAVIGATION
+   PAGE NAVIGATION & TRACKING
 ════════════════════════════════════════ */
 function goTo(n) {
   document.getElementById('page' + currentPage).classList.remove('active');
@@ -619,11 +719,13 @@ function goTo(n) {
   updateDots(n);
   window.scrollTo(0, 0);
 
-  // Initialize specific page interactions
-  if (n === 4) initTTT();
-  if (n === 5) setTimeout(initScratch, 80);
-  if (n === 6) initHidden();
-  if (n === 7) resetNoBtn();
+  // Initialize specific page interactions & send tracking
+  if (n === 2) trackProgress(2, "Cutie opened the envelope & is reading your apology letter! 💌");
+  if (n === 3) trackProgress(3, "Cutie is reading 'Why I Miss You' (6 reasons) 🥺");
+  if (n === 4) { initTTT(); trackProgress(4, "Cutie reached the Tic-Tac-Toe game! 🎮"); }
+  if (n === 5) { setTimeout(initScratch, 80); trackProgress(5, "Cutie reached the Scratch Cards! 🎴"); }
+  if (n === 6) { initHidden(); trackProgress(6, "Cutie reached the starry Secret Message page! 🔐"); }
+  if (n === 7) { resetNoBtn(); trackProgress(7, "Cutie reached The Big Question: 'Will you give me another chance?' ❓"); }
   if (n === 8) celebrateYes();
 }
 
@@ -668,7 +770,6 @@ function initTTT() {
 }
 
 function resetTTT() {
-  // Start with a completely empty board so she places all 3 hearts herself!
   tttBoard = Array(9).fill(null);
   tttOver  = false;
   userHeartsPlaced = 0;
@@ -719,13 +820,10 @@ function tttClick(i) {
 function friendlyComputerMove() {
   if (tttOver) return;
 
-  // Find all empty cells
   const emptyIndices = tttBoard.map((v, idx) => v === null ? idx : -1).filter(idx => idx >= 0);
   if (emptyIndices.length === 0) return;
 
-  // Check if player can win on next move:
-  // We DELIBERATELY avoid blocking the player's winning move,
-  // so she can place her 3rd heart and win!
+  // DELIBERATELY avoid blocking player's winning move so she can complete 3 hearts!
   let playerWinningMoves = [];
   for (const empty of emptyIndices) {
     tttBoard[empty] = 'P';
@@ -735,7 +833,6 @@ function friendlyComputerMove() {
     tttBoard[empty] = null;
   }
 
-  // Prefer moves that DON'T block her winning spots
   let safeChoices = emptyIndices.filter(idx => !playerWinningMoves.includes(idx));
   let chosenMove;
   if (safeChoices.length > 0) {
@@ -747,7 +844,6 @@ function friendlyComputerMove() {
   tttBoard[chosenMove] = 'C';
   setCellSymbol(chosenMove, '🌙');
 
-  // Check if computer somehow won
   const cWin = checkWin('C');
   if (cWin) {
     tttOver = true;
@@ -756,7 +852,6 @@ function friendlyComputerMove() {
     return;
   }
 
-  // Check draw
   if (tttBoard.every(v => v !== null)) {
     tttOver = true;
     document.getElementById('tttStatus').textContent = "It's a tie! Tap restart so you win 🥺";
@@ -785,6 +880,7 @@ function tttWin(combo, who) {
   const cells = document.getElementById('tttGrid').children;
   combo.forEach(i => cells[i].classList.add('win-cell'));
   launchConfetti();
+  trackProgress(4, "Cutie won Tic-Tac-Toe and saw the cute dancing cat! 😸");
   setTimeout(() => {
     document.getElementById('tttMain').style.display = 'none';
     document.getElementById('happyCatCelebration').classList.add('show');
@@ -810,7 +906,6 @@ function setupScratchCard(idx) {
   const W = canvas.width;
   const H = canvas.height;
 
-  // Background gradient for scratch foil
   const grad = ctx.createLinearGradient(0, 0, W, H);
   grad.addColorStop(0, '#ff9abb');
   grad.addColorStop(1, '#ff6b9d');
@@ -818,14 +913,12 @@ function setupScratchCard(idx) {
   drawRoundRect(ctx, 0, 0, W, H, 20);
   ctx.fill();
 
-  // Emojis on foil
   ctx.font = `${Math.round(H * .32)}px serif`;
   ctx.textAlign = 'center';
   ctx.fillText('🌸', W * .2, H * .65);
   ctx.fillText('✨', W * .5, H * .7);
   ctx.fillText('💕', W * .8, H * .65);
 
-  // Text on foil
   ctx.fillStyle = 'rgba(255,255,255,.95)';
   ctx.font = `bold ${Math.round(H * .18)}px Nunito, sans-serif`;
   ctx.fillText('✨ Scratch Me! ✨', W / 2, H * .42);
@@ -893,6 +986,7 @@ function checkScratchPct(idx, ctx, W, H) {
     launchConfetti();
     if (scratchState.every(Boolean)) {
       document.getElementById('scratchReward').classList.add('show');
+      trackProgress(5, "Cutie scratched & revealed all 3 secret notes! ✨");
     }
   }
 }
@@ -910,7 +1004,6 @@ function initHidden() {
   if (hiddenInited) return;
   hiddenInited = true;
 
-  // Starry field
   const bg = document.getElementById('starsBg');
   for (let i = 0; i < 60; i++) {
     const s = document.createElement('div');
@@ -963,6 +1056,7 @@ function unlockMsg() {
   document.getElementById('holdTimerText').textContent = 'Unlocked! 💕';
   document.getElementById('holdProgressCircle').style.stroke = '#ffe066';
   launchConfetti();
+  trackProgress(6, "Cutie held for 3s and unlocked your secret heartfelt message! 💖");
   setTimeout(() => {
     const wrap = document.getElementById('holdBtnWrap');
     wrap.style.transition = 'opacity .5s';
@@ -1008,11 +1102,10 @@ function safeNoBtnPos(touchX, touchY) {
   const bw  = btn.offsetWidth  || 130;
   const bh  = btn.offsetHeight || 50;
 
-  // Safe screen margins
   const minX = 18;
   const maxX = window.innerWidth - bw - 18;
-  const minY = 70; // safe from top header
-  const maxY = window.innerHeight - bh - 85; // safe from bottom navigation/dots
+  const minY = 70;
+  const maxY = window.innerHeight - bh - 85;
 
   const yesBtn = document.getElementById('yesBtn');
   const yRect = yesBtn ? yesBtn.getBoundingClientRect() : null;
@@ -1020,12 +1113,10 @@ function safeNoBtnPos(touchX, touchY) {
   let bestX = minX, bestY = minY;
   let maxDist = -1;
 
-  // Attempt up to 25 candidate spots to find one far away from current touch and Yes button
   for (let i = 0; i < 25; i++) {
     const rx = minX + Math.random() * Math.max(10, maxX - minX);
     const ry = minY + Math.random() * Math.max(10, maxY - minY);
 
-    // Avoid area over Yes button
     if (yRect) {
       if (rx + bw > yRect.left - 20 && rx < yRect.right + 20 &&
           ry + bh > yRect.top - 20 && ry < yRect.bottom + 20) {
@@ -1033,7 +1124,6 @@ function safeNoBtnPos(touchX, touchY) {
       }
     }
 
-    // Measure distance from current finger touch or mouse
     if (touchX !== undefined && touchY !== undefined) {
       const dist = Math.hypot(rx + bw/2 - touchX, ry + bh/2 - touchY);
       if (dist > maxDist) {
@@ -1059,7 +1149,6 @@ function escapeNo(e) {
 
   noAttempts++;
 
-  // Get touch coordinate if available
   let tx, ty;
   if (e && e.touches && e.touches[0]) {
     tx = e.touches[0].clientX;
@@ -1074,22 +1163,27 @@ function escapeNo(e) {
   btn.style.left = x + 'px';
   btn.style.top  = y + 'px';
 
-  // Update button text
   btn.textContent = noBtnTexts[Math.min(noAttempts, noBtnTexts.length - 1)];
-
-  // Update crying bear
   document.getElementById('bear').textContent = bearFaces[Math.min(noAttempts - 1, bearFaces.length - 1)];
 
-  // Update question variants
   const qi = Math.min(Math.floor(noAttempts / 2), questionVariants.length - 1);
   document.getElementById('questionTitle').innerHTML = questionVariants[qi][0];
   document.getElementById('questionSub').textContent = questionVariants[qi][1];
 
-  // Pop-up funny guilt text
   showNoMessage();
 
   if (noAttempts > 1) {
     document.getElementById('noCounter').textContent = `You've tried clicking 'No' ${noAttempts} times… 😅`;
+  }
+
+  // Live notify Suyash on No attempts (at 1st, 3rd, 6th, etc.)
+  if (noAttempts === 1 || noAttempts % 3 === 0) {
+    sendNtfyNotification({
+      title: `[Page 7/8] Cutie clicked 'No' #${noAttempts}`,
+      message: `Cutie tried pressing 'No' (attempt #${noAttempts})! Button ran away.`,
+      priority: 3,
+      tags: ["bear", "running"]
+    });
   }
 }
 
@@ -1098,7 +1192,6 @@ function resetNoBtn() {
   const btn = document.getElementById('noBtn');
   btn.textContent = noBtnTexts[0];
 
-  // Position nicely below the Yes button initially
   const yesWrap = document.getElementById('yesBtnWrap');
   if (yesWrap) {
     const r = yesWrap.getBoundingClientRect();
@@ -1127,7 +1220,6 @@ function showNoMessage() {
   setTimeout(() => msg.remove(), 1900);
 }
 
-// Bind all touch & pointer events to guarantee No button runs away before tap can register!
 const noBtn = document.getElementById('noBtn');
 noBtn.addEventListener('touchstart',  escapeNo, { passive: false });
 noBtn.addEventListener('touchmove',   escapeNo, { passive: false });
@@ -1140,10 +1232,7 @@ noBtn.addEventListener('click',       escapeNo);
 ════════════════════════════════════════ */
 function handleYes() {
   createRipple(window.innerWidth / 2, window.innerHeight / 2);
-
-  // Send instant notification to Suyash
   sendYesNotification();
-
   launchConfetti();
   setTimeout(() => goTo(8), 300);
 }
@@ -1177,6 +1266,8 @@ function celebrateYes() {
 ════════════════════════════════════════ */
 window.addEventListener('load', () => {
   resetNoBtn();
+  // Send immediate initial ping when she opens the site
+  trackProgress(1, "Cutie just opened the apology website! (Looking at envelope 💌)");
 });
 </script>
 </body>
