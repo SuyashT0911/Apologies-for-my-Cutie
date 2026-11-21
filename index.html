@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>For My Cutie 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════ RESET & ROOT ══════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #ff6b9d;
+      --light: #fff0f6;
+      --peach: #ffb3c6;
+      --purple: #c77dff;
+      --yellow: #ffe066;
+      --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--light);
+      overflow-x: hidden;
+      min-height: 100vh;
+      overscroll-behavior: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+    /* ══════════════ PARTICLES ══════════════ */
+    #particles {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .particle {
+      position: absolute; font-size: clamp(14px, 3vw, 22px);
+      animation: floatUp linear infinite; opacity: 0; user-select: none;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(100vh) rotate(0deg) scale(.5); }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-10vh) rotate(360deg) scale(1.2); }
+    }
+
+    /* ══════════════ PAGES ══════════════ */
+    .page {
+      display: none; position: relative; z-index: 1;
+      min-height: 100dvh; padding: 24px 16px 85px;
+      flex-direction: column; align-items: center;
+      justify-content: center; text-align: center;
+    }
+    .page.active { display: flex; }
+
+    /* ══════════════ PROGRESS DOTS ══════════════ */
+    .dots {
+      position: fixed; bottom: 18px; left: 50%;
+      transform: translateX(-50%); display: flex; gap: 7px; z-index: 20;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #ffb3c6; transition: background .3s, transform .3s;
+    }
+    .dot.active { background: var(--pink); transform: scale(1.5); }
+
+    /* ══════════════ RIPPLE ══════════════ */
+    .ripple-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,107,157,.3); transform: scale(0);
+      animation: rippleAnim .7s linear; pointer-events: none;
+    }
+    @keyframes rippleAnim { to { transform: scale(5); opacity: 0; } }
+
+    /* ══════════════ SHARED BUTTONS ══════════════ */
+    .next-btn {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white; border: none; border-radius: 50px;
+      padding: 13px 34px; font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: clamp(14px, 4vw, 16px); cursor: pointer;
+      box-shadow: 0 6px 24px rgba(255,107,157,.35);
+      transition: transform .15s; margin-top: 24px;
+    }
+    .next-btn:active { transform: scale(.95); }
+
+    /* ══════════════ KEYFRAME ANIMATIONS ══════════════ */
+    @keyframes heartbeat { 0%,100%{transform:scale(1);}30%{transform:scale(1.25);}60%{transform:scale(1.1);} }
+    @keyframes wiggle { 0%,100%{transform:rotate(-8deg) scale(1);}50%{transform:rotate(8deg) scale(1.15);} }
+    @keyframes popIn { from{opacity:0;transform:scale(.5);}to{opacity:1;transform:scale(1);} }
+    @keyframes slideIn { from{opacity:0;transform:translateY(60px) scale(.9);}to{opacity:1;transform:translateY(0) scale(1);} }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:.2;} }
+    @keyframes glow {
+      0%,100%{box-shadow:0 6px 20px rgba(255,107,157,.4);}
+      50%{box-shadow:0 6px 44px rgba(255,107,157,.9);}
+    }
+    @keyframes rainbow {
+      0%{color:#ff6b9d;}25%{color:#c77dff;}50%{color:#ff9a3c;}75%{color:#56c2d6;}100%{color:#ff6b9d;}
+    }
+    @keyframes fillMeter { to { width: 100%; } }
+    @keyframes bearBounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);} }
+    @keyframes confettiFall { to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);} }
+    @keyframes catDance { from{transform:scale(1) rotate(-8deg);}to{transform:scale(1.15) rotate(8deg);} }
+    @keyframes popMsg { from{opacity:0;transform:scale(.3);}to{opacity:1;transform:scale(1);} }
+    @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.08);} }
+    @keyframes twinkle { 0%,100%{opacity:.2;}50%{opacity:1;} }
+
+    /* ══════════════ PAGE 1: ENVELOPE LANDING ══════════════ */
+    #page1 { background: linear-gradient(135deg,#fff0f6,#ffe4f0,#ffd6e8); }
+    .envelope-wrapper { cursor: pointer; margin-bottom: 24px; }
+    .envelope {
+      width: clamp(130px,38vw,200px); height: clamp(85px,24vw,130px);
+      background: #ff9abb; border-radius: 14px; position: relative;
+      box-shadow: 0 8px 32px rgba(255,107,157,.4);
+      display: flex; align-items: flex-end; justify-content: center;
+      overflow: hidden; transition: transform .2s;
+    }
+    .envelope-wrapper:active .envelope { transform: scale(.95); }
+    .envelope-flap {
+      position: absolute; top: 0; left: 0; width: 100%; height: 55%;
+      background: #ff6b9d; clip-path: polygon(0 0, 100% 0, 50% 110%);
+      transform-origin: top center; transition: transform .5s, opacity .5s; z-index: 2;
+    }
+    .envelope.open .envelope-flap { transform: rotateX(180deg) scaleY(-1); opacity: 0; }
+    .envelope-heart {
+      font-size: clamp(28px,8vw,50px); margin-bottom: 12px;
+      position: relative; z-index: 1; animation: heartbeat 1.2s ease-in-out infinite;
+    }
+    .tap-hint { font-size: 13px; color: var(--pink); margin-top: 8px; animation: blink 1.5s ease-in-out infinite; }
+
+    /* ══════════════ PAGE 2: SORRY LETTER ══════════════ */
+    #page2 { background: linear-gradient(160deg,#fff4fb,#fce4f8); }
+    .letter-card {
+      background: white; border-radius: 24px;
+      padding: clamp(20px,5vw,40px); max-width: 520px; width: 100%;
+      box-shadow: 0 10px 50px rgba(255,107,157,.2);
+      position: relative; animation: slideIn .6s cubic-bezier(.34,1.56,.64,1);
+    }
+    .letter-card::before {
+      content: '💌'; position: absolute; top: -20px; left: 50%;
+      transform: translateX(-50%); font-size: 36px;
+    }
+    .letter-title { font-family: 'Pacifico', cursive; color: var(--pink); font-size: clamp(22px,6vw,34px); margin: 20px 0 16px; }
+    .letter-text { color: #555; font-size: clamp(14px,3.5vw,16px); line-height: 1.8; margin-bottom: 16px; }
+    .letter-text em { color: var(--pink); font-style: normal; font-weight: 800; }
+    .sticker-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; font-size: clamp(22px,6vw,32px); margin: 12px 0; }
+    .sticker { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
+    .sticker:nth-child(2){animation-delay:.3s;} .sticker:nth-child(3){animation-delay:.6s;}
+    .sticker:nth-child(4){animation-delay:.9s;} .sticker:nth-child(5){animation-delay:1.2s;}
+
+    /* ══════════════ PAGE 3: REASONS ══════════════ */
+    #page3 { background: linear-gradient(135deg,#fff0f6,#f3e8ff); }
+    .reasons-title { font-family: 'Pacifico', cursive; color: var(--purple); font-size: clamp(22px,6vw,32px); margin-bottom: 20px; }
+    .reason-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; max-width: 400px; width: 100%; }
+    .reason-card {
+      background: white; border-radius: 18px; padding: 16px 12px;
+      box-shadow: 0 4px 20px rgba(199,125,255,.18);
+      animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .reason-card:nth-child(1){animation-delay:.05s;} .reason-card:nth-child(2){animation-delay:.15s;}
+    .reason-card:nth-child(3){animation-delay:.25s;} .reason-card:nth-child(4){animation-delay:.35s;}
+    .reason-card:nth-child(5){animation-delay:.45s;} .reason-card:nth-child(6){animation-delay:.55s;}
+    .reason-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
+    .reason-text  { font-size: 12px; color: #666; font-weight: 700; line-height: 1.4; }
+
+    /* ══════════════ PAGE 4: TIC-TAC-TOE ACTIVITY ══════════════ */
+    #page4 { background: linear-gradient(135deg,#fff0f6,#f3e8ff); }
+    .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: min(290px, 82vw); margin: 16px auto 0; }
+    .ttt-cell {
+      aspect-ratio: 1; background: white; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: clamp(28px, 9vw, 42px); cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,107,157,.13);
+      transition: transform .15s, background .3s; user-select: none;
+    }
+    .ttt-cell:active { transform: scale(.88); }
+    .ttt-cell.taken { cursor: default; }
+    .ttt-cell.win-cell { background: linear-gradient(135deg,#ffd6e8,#ffb3c6); transform: scale(1.08); animation: heartbeat .8s ease-in-out infinite; }
+    .ttt-status { font-size: 15px; font-weight: 800; color: var(--pink); margin-bottom: 6px; min-height: 22px; }
+    .happy-cat-celebration { display: none; flex-direction: column; align-items: center; animation: popIn .6s cubic-bezier(.34,1.56,.64,1); }
+    .happy-cat-celebration.show { display: flex; }
+    .happy-cat { font-size: clamp(90px, 26vw, 130px); animation: catDance .45s ease-in-out infinite alternate; display: block; }
+    .happy-cat-text { font-family: 'Pacifico', cursive; color: var(--pink); font-size: clamp(18px, 5vw, 24px); margin-top: 10px; line-height: 1.5; }
+
+    /* ══════════════ PAGE 5: SCRATCH CARDS ACTIVITY ══════════════ */
+    #page5 { background: linear-gradient(135deg,#fff4fb,#fce4f8); }
+    .scratch-cards-container { display: flex; flex-direction: column; gap: 18px; width: min(320px, 90vw); margin: 10px auto; }
+    .scratch-card-wrap { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 6px 24px rgba(255,107,157,.18); min-height: 110px; }
+    .scratch-reveal { background: white; padding: 20px 16px; text-align: center; min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .scratch-reveal-emoji { font-size: 32px; margin-bottom: 6px; }
+    .scratch-reveal-text  { font-size: 13px; font-weight: 700; color: #555; line-height: 1.5; }
+    .scratch-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; border-radius: 20px; display: block; }
+    .scratch-hint { font-size: 12px; color: #bbb; margin-top: 4px; animation: blink 2s ease-in-out infinite; }
+    .scratch-reward { display: none; animation: fadeInUp .6s cubic-bezier(.34,1.56,.64,1); text-align: center; margin-top: 16px; }
+    .scratch-reward.show { display: block; }
+
+    /* ══════════════ PAGE 6: SECRET MESSAGE ACTIVITY ══════════════ */
+    #page6 {
+      background: linear-gradient(160deg,#0f0c29,#302b63,#24243e);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .stars-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+    .star { position: absolute; border-radius: 50%; background: white; animation: twinkle 2s ease-in-out infinite; }
+    .hold-btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; z-index: 2; margin: 20px 0; }
+    .hold-circle-wrap { position: relative; width: 130px; height: 130px; }
+    .hold-circle-bg { position: absolute; inset: 0; border-radius: 50%; background: rgba(255,255,255,.08); border: 3px solid rgba(255,255,255,.18); }
+    .hold-progress-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+    .hold-progress-circle {
+      fill: none; stroke: #ff6b9d; stroke-width: 5; stroke-linecap: round;
+      stroke-dasharray: 366; stroke-dashoffset: 366; transition: stroke-dashoffset .05s linear;
+    }
+    .hold-btn {
+      position: absolute; inset: 12px; border-radius: 50%;
+      background: linear-gradient(135deg,#ff6b9d,#c77dff); border: none; cursor: pointer;
+      font-size: 34px; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(255,107,157,.4); touch-action: none; user-select: none;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .hold-timer-text { color: rgba(255,255,255,.8); font-size: 13px; font-weight: 800; margin-top: 6px; }
+    .hold-desc { color: rgba(255,255,255,.6); font-size: 13px; max-width: 270px; line-height: 1.6; position: relative; z-index: 2; margin-bottom: 8px; }
+    .hidden-message-reveal {
+      display: none; max-width: 350px; background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(14px);
+      border-radius: 24px; padding: 24px 20px; animation: fadeInUp .8s ease-out;
+      position: relative; z-index: 2;
+    }
+    .hidden-message-reveal.show { display: block; }
+    .hidden-msg-title { font-family: 'Pacifico', cursive; color: #ff9abb; font-size: clamp(18px, 5vw, 24px); margin-bottom: 14px; }
+    .hidden-msg-text  { color: rgba(255,255,255,.9); font-size: clamp(13px, 3.5vw, 15px); line-height: 1.85; }
+    .hidden-msg-sig   { color: #ff9abb; font-weight: 800; font-size: 14px; margin-top: 14px; }
+
+    /* ══════════════ PAGE 7: THE BIG QUESTION ══════════════ */
+    #page7 { background: linear-gradient(160deg,#fff5fb,#ffe8f5); }
+    .question-title { font-family: 'Pacifico', cursive; color: var(--pink); font-size: clamp(20px,5.5vw,32px); line-height: 1.4; margin-bottom: 10px; }
+    .question-sub  { font-size: 14px; color: #aaa; margin-bottom: 28px; }
+    .bear { font-size: clamp(50px,15vw,90px); display: block; animation: bearBounce 2s ease-in-out infinite; }
+    .btn {
+      border: none; border-radius: 50px; font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: clamp(15px,4.5vw,18px); padding: 16px 36px; cursor: pointer;
+      user-select: none;
+    }
+    .btn-yes {
+      background: linear-gradient(135deg,#ff6b9d,#ff4081); color: white;
+      animation: glow 2s ease-in-out infinite;
+      box-shadow: 0 6px 20px rgba(255,107,157,.4);
+      z-index: 10;
+    }
+    .btn-yes:active { transform: scale(.95); }
+    #noBtn {
+      background: linear-gradient(135deg,#e0e0e0,#bdbdbd); color: #555;
+      position: fixed; z-index: 500;
+      transition: left .2s cubic-bezier(.34,1.56,.64,1), top .2s cubic-bezier(.34,1.56,.64,1);
+      touch-action: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,.15);
+    }
+    .no-attempt-msg {
+      position: fixed; background: white; color: var(--pink);
+      border-radius: 16px; padding: 10px 18px; font-weight: 800; font-size: 14px;
+      box-shadow: 0 4px 20px rgba(255,107,157,.3); pointer-events: none;
+      z-index: 999; animation: popMsg .4s cubic-bezier(.34,1.56,.64,1);
+      white-space: nowrap; transition: opacity .4s;
+    }
+    .promise-list { list-style: none; max-width: 360px; width: 100%; text-align: left; margin: 20px auto 0; }
+    .promise-list li {
+      background: white; border-radius: 14px; padding: 10px 14px; margin-bottom: 8px;
+      font-size: clamp(12px,3.5vw,14px); color: #555; font-weight: 700;
+      box-shadow: 0 3px 12px rgba(255,107,157,.12);
+      display: flex; align-items: center; gap: 10px;
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .promise-list li:nth-child(1){animation-delay:.1s;} .promise-list li:nth-child(2){animation-delay:.2s;}
+    .promise-list li:nth-child(3){animation-delay:.3s;} .promise-list li:nth-child(4){animation-delay:.4s;}
+    .promise-list li:nth-child(5){animation-delay:.5s;}
+    .promise-list li span.icon { font-size: 18px; flex-shrink: 0; }
+
+    /* ══════════════ PAGE 8: YES! CELEBRATION (FINAL) ══════════════ */
+    #page8 { background: linear-gradient(135deg,#fff0f6,#ffe4f0,#ffd6e8); }
+    .yes-title { font-family: 'Pacifico', cursive; font-size: clamp(28px,8vw,52px); animation: rainbow 3s linear infinite; margin-bottom: 8px; }
+    .couple-avatar {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin: 12px 0 6px;
+    }
+    .couple-boy, .couple-girl { font-size: clamp(48px, 14vw, 80px); }
+    .couple-heart { font-size: clamp(28px, 8vw, 44px); animation: heartbeat 1s ease-in-out infinite; }
+    .yes-text  { font-size: clamp(14px,4vw,17px); color: #666; max-width: 420px; line-height: 1.8; margin-bottom: 16px; }
+    .love-meter-wrap { margin: 18px 0; width: min(320px, 90%); }
+    .love-meter-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; color: var(--pink); margin-bottom: 6px; }
+    .love-meter-bar   { height: 20px; background: #ffd6e8; border-radius: 10px; overflow: hidden; }
+    .love-meter-fill  { height: 100%; background: linear-gradient(90deg,#ff6b9d,#ff4081); border-radius: 10px; animation: fillMeter 2s ease-out forwards; width: 0%; }
+  </style>
+</head>
+<body>
+
+<!-- FLOATING BACKGROUND PARTICLES -->
+<div id="particles"></div>
+
+<!-- TOUCH RIPPLE LAYER -->
+<div class="ripple-container" id="rippleContainer"></div>
+
+<!-- PROGRESS DOTS -->
+<div class="dots" id="dots"></div>
+
+<!-- ════════════════════════════════════════
+     PAGE 1: ENVELOPE LANDING
+════════════════════════════════════════ -->
+<section class="page active" id="page1">
+  <div class="envelope-wrapper" onclick="openEnvelope()">
+    <div class="envelope" id="envelope">
+      <div class="envelope-flap" id="envFlap"></div>
+      <span class="envelope-heart">💝</span>
+    </div>
+    <p class="tap-hint">✨ tap to open ✨</p>
+  </div>
+  <h1 style="font-family:'Pacifico',cursive;color:var(--pink);font-size:clamp(22px,7vw,38px);margin-bottom:8px;">Hey, Cutie 🌸</h1>
+  <p style="font-size:clamp(14px,4vw,17px);color:#888;max-width:340px;line-height:1.7;">
+    I made something special just for you.<br>Please open this little letter&nbsp;💌
+  </p>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 2: SORRY LETTER
+════════════════════════════════════════ -->
+<section class="page" id="page2">
+  <div class="letter-card">
+    <h2 class="letter-title">I'm So Sorry 💔</h2>
+    <div class="sticker-row">
+      <span class="sticker">🌸</span><span class="sticker">🐻</span>
+      <span class="sticker">💕</span><span class="sticker">🌙</span><span class="sticker">✨</span>
+    </div>
+    <p class="letter-text">
+      My dearest <em>Cutie</em>,<br><br>
+      I know I messed up, and I truly, deeply, from the bottom of my heart
+      <em>apologise</em> to you. You mean everything to me and hurting you
+      was the last thing I ever wanted to do.<br><br>
+      You deserve all the love in the universe 🌍💫 and I promise I will
+      never stop trying to be the person you deserve.
+    </p>
+    <p class="letter-text" style="margin-bottom:0;">
+      I made a few little things for you ahead… 🥺
+    </p>
+    <button class="next-btn" onclick="goTo(3)">Read More 💌</button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 3: REASONS
+════════════════════════════════════════ -->
+<section class="page" id="page3">
+  <h2 class="reasons-title">Why I Miss You 🥺</h2>
+  <div class="reason-cards">
+    <div class="reason-card"><span class="reason-emoji">😂</span><p class="reason-text">Your laugh is literally my favourite sound ever</p></div>
+    <div class="reason-card"><span class="reason-emoji">🤗</span><p class="reason-text">Your hugs feel like home – I need them!</p></div>
+    <div class="reason-card"><span class="reason-emoji">🌟</span><p class="reason-text">You make every boring day feel magical</p></div>
+    <div class="reason-card"><span class="reason-emoji">📱</span><p class="reason-text">I keep re-reading all your old messages</p></div>
+    <div class="reason-card"><span class="reason-emoji">💭</span><p class="reason-text">I think about you ~1000 times a day</p></div>
+    <div class="reason-card"><span class="reason-emoji">❤️</span><p class="reason-text">You are simply irreplaceable to me</p></div>
+  </div>
+  <button class="next-btn" onclick="goTo(4)">Play with Me 🎮</button>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 4: TIC-TAC-TOE (REAL GAME)
+════════════════════════════════════════ -->
+<section class="page" id="page4">
+  <h2 style="font-family:'Pacifico',cursive;color:var(--pink);font-size:clamp(22px,6vw,30px);margin-bottom:4px;">A Little Game For You 🎮</h2>
+  <p style="font-size:13px;color:#aaa;margin-bottom:4px;">You are ❤️ &nbsp;|&nbsp; Computer is 🌙</p>
+  <p style="font-size:12px;color:#bbb;margin-bottom:12px;">Place all 3 hearts in a row to win! 🏆</p>
+
+  <div id="tttMain">
+    <div class="ttt-status" id="tttStatus">Your turn! Tap any empty square 👇</div>
+    <div class="ttt-grid" id="tttGrid"></div>
+    <button class="next-btn" id="tttResetBtn" onclick="resetTTT()" style="display:none;margin:16px auto 0;font-size:13px;padding:8px 22px;background:linear-gradient(135deg,#bdbdbd,#9e9e9e);">Restart Game 🔄</button>
+  </div>
+
+  <div class="happy-cat-celebration" id="happyCatCelebration">
+    <span class="happy-cat">😸</span>
+    <p class="happy-cat-text">You won!! 🎉<br>Just like you won my heart forever 💖</p>
+    <button class="next-btn" onclick="goTo(5)" style="margin-top:14px;">Next Surprise 🌸 →</button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 5: SCRATCH CARDS ACTIVITY
+════════════════════════════════════════ -->
+<section class="page" id="page5">
+  <h2 style="font-family:'Pacifico',cursive;color:var(--pink);font-size:clamp(22px,6vw,30px);margin-bottom:4px;">Scratch Cards! 🎴</h2>
+  <p style="font-size:13px;color:#aaa;margin-bottom:14px;">Scratch with your finger to reveal secret notes 🌸</p>
+
+  <div class="scratch-cards-container">
+    <div class="scratch-card-wrap">
+      <div class="scratch-reveal">
+        <span class="scratch-reveal-emoji">🌸</span>
+        <p class="scratch-reveal-text">You are my favourite person in the entire world, Cutie 💕</p>
+      </div>
+      <canvas class="scratch-canvas" id="scratch-0" width="300" height="120"></canvas>
+    </div>
+    <p class="scratch-hint" id="hint-0">👆 scratch me!</p>
+
+    <div class="scratch-card-wrap">
+      <div class="scratch-reveal">
+        <span class="scratch-reveal-emoji">✨</span>
+        <p class="scratch-reveal-text">Every moment with you is my favourite memory. I miss you every second 🌙</p>
+      </div>
+      <canvas class="scratch-canvas" id="scratch-1" width="300" height="120"></canvas>
+    </div>
+    <p class="scratch-hint" id="hint-1">👆 scratch me!</p>
+
+    <div class="scratch-card-wrap">
+      <div class="scratch-reveal">
+        <span class="scratch-reveal-emoji">💖</span>
+        <p class="scratch-reveal-text">You deserve the whole universe. I'll spend forever trying to give it to you 🌍</p>
+      </div>
+      <canvas class="scratch-canvas" id="scratch-2" width="300" height="120"></canvas>
+    </div>
+    <p class="scratch-hint" id="hint-2">👆 scratch me!</p>
+  </div>
+
+  <div class="scratch-reward" id="scratchReward">
+    <span style="font-size:65px;display:block;animation:catDance .5s ease-in-out infinite alternate;">😸</span>
+    <p style="font-family:'Pacifico',cursive;color:var(--pink);font-size:20px;margin-top:10px;">All revealed! 🎉</p>
+    <button class="next-btn" onclick="goTo(6)" style="margin-top:12px;">See Secret Message 🔐 →</button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 6: SECRET MESSAGE ACTIVITY
+════════════════════════════════════════ -->
+<section class="page" id="page6">
+  <div class="stars-bg" id="starsBg"></div>
+
+  <h2 style="font-family:'Pacifico',cursive;color:#ff9abb;font-size:clamp(22px,6vw,30px);position:relative;z-index:2;margin-bottom:6px;">Secret Message 🔐</h2>
+  <p class="hold-desc">
+    Hold the button below with your finger for 3 seconds to unlock what I've kept in my heart ✨
+  </p>
+
+  <div class="hold-btn-wrap" id="holdBtnWrap">
+    <div class="hold-circle-wrap">
+      <div class="hold-circle-bg"></div>
+      <svg class="hold-progress-svg" viewBox="0 0 130 130">
+        <circle class="hold-progress-circle" id="holdProgressCircle" cx="65" cy="65" r="58"/>
+      </svg>
+      <button class="hold-btn" id="holdBtn">🔐</button>
+    </div>
+    <p class="hold-timer-text" id="holdTimerText">Hold to unlock…</p>
+  </div>
+
+  <div class="hidden-message-reveal" id="hiddenMessageReveal">
+    <p class="hidden-msg-title">💌 For My Cutie</p>
+    <p class="hidden-msg-text">
+      If the stars could count the times I've thought of you,<br>
+      the sky would run out of space.<br><br>
+      You are the quiet comfort in a noisy world,<br>
+      the smile I reach for before I even know I need it.<br><br>
+      I am sorry I hurt you. Truly.<br>
+      And I am asking — no, <em style="color:#ff9abb;font-style:normal;">begging</em> — you<br>
+      to let me love you the way you deserve.<br><br>
+      Forever and without question,<br>
+      you are the person I choose.<br>
+      Every single day. 🌙
+    </p>
+    <p class="hidden-msg-sig">— Yours, always 💕</p>
+    <button class="next-btn" onclick="goTo(7)" style="margin-top:20px;background:linear-gradient(135deg,#ff6b9d,#ff4081);">One Last Question… 👉</button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 7: THE BIG QUESTION (NO ESCAPES!)
+════════════════════════════════════════ -->
+<section class="page" id="page7">
+  <span class="bear" id="bear">🥺</span>
+  <h2 class="question-title" id="questionTitle">Will you give me<br>another chance?</h2>
+  <p class="question-sub" id="questionSub">think carefully… 🌸</p>
+
+  <div id="yesBtnWrap" style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:2;">
+    <button class="btn btn-yes" id="yesBtn" onclick="handleYes()">Yes! 💕</button>
+    <p id="noCounter" style="font-size:13px;color:#ccc;margin-top:14px;min-height:18px;"></p>
+  </div>
+
+  <!-- Runaway No button -->
+  <button class="btn" id="noBtn">No 😒</button>
+
+  <h3 style="font-family:'Pacifico',cursive;color:var(--purple);font-size:clamp(18px,5vw,24px);margin-top:32px;">
+    I promise you… 🤞
+  </h3>
+  <ul class="promise-list">
+    <li><span class="icon">💬</span>I will always communicate openly</li>
+    <li><span class="icon">🫶</span>I will put you first, always</li>
+    <li><span class="icon">🛡️</span>I will never let you feel unloved again</li>
+    <li><span class="icon">😄</span>I will keep making you smile every day</li>
+    <li><span class="icon">🌙</span>I'll always be there at 2am for you</li>
+  </ul>
+</section>
+
+<!-- ════════════════════════════════════════
+     PAGE 8: YES! CELEBRATION (BOY & GIRL)
+════════════════════════════════════════ -->
+<section class="page" id="page8">
+  <h1 class="yes-title">YAY!!! 🎉</h1>
+
+  <!-- Cute Boy and Girl Avatar -->
+  <div class="couple-avatar">
+    <span class="couple-boy">👦🏻</span>
+    <span class="couple-heart">💖</span>
+    <span class="couple-girl">👧🏻</span>
+  </div>
+
+  <p class="yes-text">
+    You just made me the happiest person alive, <strong>Cutie</strong>! 💖<br>
+    I love you to the moon and back, and I promise I will never take
+    you for granted ever again. 🌕✨
+  </p>
+
+  <div class="love-meter-wrap">
+    <div class="love-meter-label"><span>Love Level</span><span>∞ %</span></div>
+    <div class="love-meter-bar"><div class="love-meter-fill" id="loveFill"></div></div>
+  </div>
+
+  <button class="next-btn" onclick="launchConfetti()" style="margin-top:10px;">
+    🎊 Celebrate Again! 🎊
+  </button>
+
+  <p style="margin-top:24px;font-size:14px;color:#aaa;">
+    (now go reply to my texts please 🥺💕)
+  </p>
+</section>
+
+<script>
+/* ════════════════════════════════════════
+   NOTIFICATION CONFIGURATION
+════════════════════════════════════════ */
+// ntfy.sh provides instant free push notifications to your phone!
+// Open https://ntfy.sh/cutie-said-yes-suyash on your phone to subscribe
+const NOTIFY_TOPIC = "cutie-said-yes-suyash";
+const NOTIFY_EMAIL = "tiwarisuyash700+s@gmail.com";
+
+function sendYesNotification() {
+  const timeStr = new Date().toLocaleTimeString();
+  const msg = `🎉 CUTIE SAID YES! 💕\n\nCutie clicked "Yes!" on your apology website at ${timeStr}!\nShe attempted clicking "No" ${noAttempts} times before saying Yes 🥺💖`;
+
+  // 1. Instant Push Notification via ntfy.sh (No account or app install required, works in browser too!)
+  try {
+    fetch(`https://ntfy.sh/${NOTIFY_TOPIC}`, {
+      method: "POST",
+      headers: {
+        "Title": "🎉 Cutie Said YES! 💖",
+        "Priority": "urgent",
+        "Tags": "tada,heart,couple"
+      },
+      body: msg
+    }).catch(() => {});
+  } catch(e) {}
+
+  // 2. Email Notification via FormSubmit
+  if (NOTIFY_EMAIL) {
+    try {
+      fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: "🎉 Cutie Said YES! 💕 She accepted your apology!",
+          time: timeStr,
+          noAttempts: noAttempts,
+          message: "Cutie just accepted your apology on the website!"
+        })
+      }).catch(() => {});
+    } catch(e) {}
+  }
+}
+
+/* ════════════════════════════════════════
+   PARTICLES BACKGROUND
+════════════════════════════════════════ */
+const EMOJIS = ['🌸','💕','✨','🌙','💫','🌷','🍀','💖','🦋','🌈','⭐','🎀'];
+function spawnParticle() {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.animationDuration = (6 + Math.random() * 8) + 's';
+  p.style.animationDelay    = (Math.random() * 3) + 's';
+  document.getElementById('particles').appendChild(p);
+  setTimeout(() => p.remove(), 15000);
+}
+setInterval(spawnParticle, 650);
+for (let i = 0; i < 8; i++) spawnParticle();
+
+/* ════════════════════════════════════════
+   PROGRESS DOTS (PAGES 1 TO 8)
+════════════════════════════════════════ */
+const TOTAL_PAGES = 8;
+let currentPage = 1;
+(function buildDots() {
+  const wrap = document.getElementById('dots');
+  for (let i = 1; i <= TOTAL_PAGES; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.id = 'dot' + i;
+    wrap.appendChild(d);
+  }
+})();
+function updateDots(n) {
+  for (let i = 1; i <= TOTAL_PAGES; i++)
+    document.getElementById('dot' + i).classList.toggle('active', i === n);
+}
+
+/* ════════════════════════════════════════
+   PAGE NAVIGATION
+════════════════════════════════════════ */
+function goTo(n) {
+  document.getElementById('page' + currentPage).classList.remove('active');
+  currentPage = n;
+  document.getElementById('page' + n).classList.add('active');
+  updateDots(n);
+  window.scrollTo(0, 0);
+
+  // Initialize specific page interactions
+  if (n === 4) initTTT();
+  if (n === 5) setTimeout(initScratch, 80);
+  if (n === 6) initHidden();
+  if (n === 7) resetNoBtn();
+  if (n === 8) celebrateYes();
+}
+
+/* ════════════════════════════════════════
+   ENVELOPE OPEN
+════════════════════════════════════════ */
+function openEnvelope() {
+  document.getElementById('envelope').classList.add('open');
+  createRipple(window.innerWidth / 2, window.innerHeight / 2);
+  setTimeout(() => goTo(2), 650);
+}
+
+/* ════════════════════════════════════════
+   TOUCH RIPPLE
+════════════════════════════════════════ */
+function createRipple(x, y) {
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.cssText = `width:60px;height:60px;left:${x-30}px;top:${y-30}px`;
+  document.getElementById('rippleContainer').appendChild(r);
+  setTimeout(() => r.remove(), 800);
+}
+document.addEventListener('click', e => createRipple(e.clientX, e.clientY));
+document.addEventListener('touchstart', e => {
+  if (e.touches[0]) createRipple(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: true });
+
+/* ════════════════════════════════════════
+   PAGE 4: TIC-TAC-TOE (ACTUAL GAME - EMPTY START)
+════════════════════════════════════════ */
+let tttBoard = Array(9).fill(null);
+let tttOver  = false;
+let userHeartsPlaced = 0;
+const WIN_COMBOS = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+
+function initTTT() {
+  resetTTT();
+}
+
+function resetTTT() {
+  // Start with a completely empty board so she places all 3 hearts herself!
+  tttBoard = Array(9).fill(null);
+  tttOver  = false;
+  userHeartsPlaced = 0;
+  document.getElementById('happyCatCelebration').classList.remove('show');
+  document.getElementById('tttMain').style.display = '';
+  document.getElementById('tttResetBtn').style.display = 'none';
+  document.getElementById('tttStatus').textContent = 'Your turn! Tap any empty square 👇';
+
+  const grid = document.getElementById('tttGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'ttt-cell';
+    cell.dataset.i = i;
+    cell.addEventListener('click', () => tttClick(i));
+    cell.addEventListener('touchend', (e) => { e.preventDefault(); tttClick(i); }, { passive: false });
+    grid.appendChild(cell);
+  }
+}
+
+function tttClick(i) {
+  if (tttOver || tttBoard[i]) return;
+
+  // Place player's heart
+  tttBoard[i] = 'P';
+  userHeartsPlaced++;
+  setCellSymbol(i, '❤️');
+
+  // Check if player won
+  const win = checkWin('P');
+  if (win) {
+    return tttWin(win, 'player');
+  }
+
+  // Check draw
+  if (tttBoard.every(v => v !== null)) {
+    tttOver = true;
+    document.getElementById('tttStatus').textContent = "It's a tie! 🥺 Tap restart so you can win!";
+    document.getElementById('tttResetBtn').style.display = 'inline-block';
+    return;
+  }
+
+  // Friendly AI turn
+  document.getElementById('tttStatus').textContent = '🌙 Thinking…';
+  setTimeout(friendlyComputerMove, 450);
+}
+
+function friendlyComputerMove() {
+  if (tttOver) return;
+
+  // Find all empty cells
+  const emptyIndices = tttBoard.map((v, idx) => v === null ? idx : -1).filter(idx => idx >= 0);
+  if (emptyIndices.length === 0) return;
+
+  // Check if player can win on next move:
+  // We DELIBERATELY avoid blocking the player's winning move,
+  // so she can place her 3rd heart and win!
+  let playerWinningMoves = [];
+  for (const empty of emptyIndices) {
+    tttBoard[empty] = 'P';
+    if (checkWin('P')) {
+      playerWinningMoves.push(empty);
+    }
+    tttBoard[empty] = null;
+  }
+
+  // Prefer moves that DON'T block her winning spots
+  let safeChoices = emptyIndices.filter(idx => !playerWinningMoves.includes(idx));
+  let chosenMove;
+  if (safeChoices.length > 0) {
+    chosenMove = safeChoices[Math.floor(Math.random() * safeChoices.length)];
+  } else {
+    chosenMove = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+  }
+
+  tttBoard[chosenMove] = 'C';
+  setCellSymbol(chosenMove, '🌙');
+
+  // Check if computer somehow won
+  const cWin = checkWin('C');
+  if (cWin) {
+    tttOver = true;
+    document.getElementById('tttStatus').textContent = "Aww! Let's restart so you win 💕";
+    document.getElementById('tttResetBtn').style.display = 'inline-block';
+    return;
+  }
+
+  // Check draw
+  if (tttBoard.every(v => v !== null)) {
+    tttOver = true;
+    document.getElementById('tttStatus').textContent = "It's a tie! Tap restart so you win 🥺";
+    document.getElementById('tttResetBtn').style.display = 'inline-block';
+    return;
+  }
+
+  document.getElementById('tttStatus').textContent = 'Your turn! Tap an empty square 👇';
+}
+
+function setCellSymbol(i, sym) {
+  const cell = document.getElementById('tttGrid').children[i];
+  cell.textContent = sym;
+  cell.classList.add('taken');
+  cell.style.transform = 'scale(1.18)';
+  setTimeout(() => cell.style.transform = '', 180);
+}
+
+function checkWin(p) {
+  for (const c of WIN_COMBOS) if (c.every(i => tttBoard[i] === p)) return c;
+  return null;
+}
+
+function tttWin(combo, who) {
+  tttOver = true;
+  const cells = document.getElementById('tttGrid').children;
+  combo.forEach(i => cells[i].classList.add('win-cell'));
+  launchConfetti();
+  setTimeout(() => {
+    document.getElementById('tttMain').style.display = 'none';
+    document.getElementById('happyCatCelebration').classList.add('show');
+  }, 700);
+}
+
+/* ════════════════════════════════════════
+   PAGE 5: SCRATCH CARDS
+════════════════════════════════════════ */
+let scratchState  = [false, false, false];
+let scratchInited = false;
+
+function initScratch() {
+  if (scratchInited) return;
+  scratchInited = true;
+  for (let idx = 0; idx < 3; idx++) setupScratchCard(idx);
+}
+
+function setupScratchCard(idx) {
+  const canvas = document.getElementById('scratch-' + idx);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  // Background gradient for scratch foil
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#ff9abb');
+  grad.addColorStop(1, '#ff6b9d');
+  ctx.fillStyle = grad;
+  drawRoundRect(ctx, 0, 0, W, H, 20);
+  ctx.fill();
+
+  // Emojis on foil
+  ctx.font = `${Math.round(H * .32)}px serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('🌸', W * .2, H * .65);
+  ctx.fillText('✨', W * .5, H * .7);
+  ctx.fillText('💕', W * .8, H * .65);
+
+  // Text on foil
+  ctx.fillStyle = 'rgba(255,255,255,.95)';
+  ctx.font = `bold ${Math.round(H * .18)}px Nunito, sans-serif`;
+  ctx.fillText('✨ Scratch Me! ✨', W / 2, H * .42);
+  ctx.font = `${Math.round(H * .13)}px Nunito, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,.75)';
+  ctx.fillText('(rub with your finger)', W / 2, H * .62);
+
+  let drawing = false;
+  function getXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = W / rect.width;
+    const sy = H / rect.height;
+    if (e.touches && e.touches[0]) {
+      return { x: (e.touches[0].clientX - rect.left) * sx, y: (e.touches[0].clientY - rect.top) * sy };
+    }
+    return { x: (e.clientX - rect.left) * sx, y: (e.clientY - rect.top) * sy };
+  }
+
+  function scratchAt(e) {
+    if (!drawing) return;
+    const { x, y } = getXY(e);
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 26, 0, Math.PI * 2);
+    ctx.fill();
+    checkScratchPct(idx, ctx, W, H);
+  }
+
+  canvas.addEventListener('mousedown', () => drawing = true);
+  document.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('mousemove', scratchAt);
+
+  canvas.addEventListener('touchstart',  (e) => { e.preventDefault(); drawing = true;  }, { passive: false });
+  canvas.addEventListener('touchend',    (e) => { e.preventDefault(); drawing = false; }, { passive: false });
+  canvas.addEventListener('touchcancel', (e) => { e.preventDefault(); drawing = false; }, { passive: false });
+  canvas.addEventListener('touchmove',   (e) => { e.preventDefault(); scratchAt(e);    }, { passive: false });
+}
+
+function drawRoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function checkScratchPct(idx, ctx, W, H) {
+  if (scratchState[idx]) return;
+  const data = ctx.getImageData(0, 0, W, H).data;
+  let transparent = 0;
+  for (let i = 3; i < data.length; i += 4) if (data[i] < 128) transparent++;
+  if ((transparent / (W * H)) * 100 > 50) {
+    scratchState[idx] = true;
+    const c = document.getElementById('scratch-' + idx);
+    c.style.transition = 'opacity .6s';
+    c.style.opacity = '0';
+    document.getElementById('hint-' + idx).style.display = 'none';
+    setTimeout(() => { c.style.display = 'none'; }, 650);
+    launchConfetti();
+    if (scratchState.every(Boolean)) {
+      document.getElementById('scratchReward').classList.add('show');
+    }
+  }
+}
+
+/* ════════════════════════════════════════
+   PAGE 6: SECRET MESSAGE (HOLD 3s)
+════════════════════════════════════════ */
+let hiddenInited = false;
+let holdInterval = null;
+let holdProgress = 0;
+const HOLD_MS    = 3000;
+const CIRCUMF    = 2 * Math.PI * 58;
+
+function initHidden() {
+  if (hiddenInited) return;
+  hiddenInited = true;
+
+  // Starry field
+  const bg = document.getElementById('starsBg');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = 1 + Math.random() * 3;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s;`;
+    bg.appendChild(s);
+  }
+
+  const btn    = document.getElementById('holdBtn');
+  const circle = document.getElementById('holdProgressCircle');
+  circle.style.strokeDasharray  = CIRCUMF;
+  circle.style.strokeDashoffset = CIRCUMF;
+
+  function startHold(e) {
+    e.preventDefault();
+    if (document.getElementById('hiddenMessageReveal').classList.contains('show')) return;
+    clearInterval(holdInterval);
+    holdInterval = setInterval(() => {
+      holdProgress = Math.min(holdProgress + 50, HOLD_MS);
+      const offset = CIRCUMF - (holdProgress / HOLD_MS) * CIRCUMF;
+      circle.style.strokeDashoffset = offset;
+      const rem = Math.ceil((HOLD_MS - holdProgress) / 1000);
+      document.getElementById('holdTimerText').textContent =
+        holdProgress < HOLD_MS ? `Hold… ${rem}s` : 'Unlocking! ✨';
+      if (holdProgress >= HOLD_MS) { clearInterval(holdInterval); unlockMsg(); }
+    }, 50);
+  }
+
+  function stopHold(e) {
+    e.preventDefault();
+    clearInterval(holdInterval);
+    if (holdProgress < HOLD_MS) {
+      holdProgress = 0;
+      circle.style.strokeDashoffset = CIRCUMF;
+      document.getElementById('holdTimerText').textContent = 'Hold to unlock…';
+    }
+  }
+
+  btn.addEventListener('mousedown',   startHold);
+  btn.addEventListener('mouseup',     stopHold);
+  btn.addEventListener('mouseleave',  stopHold);
+  btn.addEventListener('touchstart',  startHold, { passive: false });
+  btn.addEventListener('touchend',    stopHold,  { passive: false });
+  btn.addEventListener('touchcancel', stopHold,  { passive: false });
+}
+
+function unlockMsg() {
+  document.getElementById('holdBtn').textContent = '💌';
+  document.getElementById('holdTimerText').textContent = 'Unlocked! 💕';
+  document.getElementById('holdProgressCircle').style.stroke = '#ffe066';
+  launchConfetti();
+  setTimeout(() => {
+    const wrap = document.getElementById('holdBtnWrap');
+    wrap.style.transition = 'opacity .5s';
+    wrap.style.opacity = '0';
+    setTimeout(() => {
+      wrap.style.display = 'none';
+      document.getElementById('hiddenMessageReveal').classList.add('show');
+    }, 500);
+  }, 500);
+}
+
+/* ════════════════════════════════════════
+   PAGE 7: NO BUTTON ESCAPE (BULLETPROOF MOBILE LOGIC)
+════════════════════════════════════════ */
+let noAttempts = 0;
+const noBtnTexts = [
+  'No 😒','Are you sure? 🥺','Think again… 💔','Please don\'t… 😭',
+  'I\'m begging you! 🙏','One more chance? 💕','Noooo please! 🥺',
+  'My heart hurts… 💔','Don\'t do this… 😢','Pretty please? 🌸',
+  'I love you so much… 💝','You\'re breaking my heart 💔',
+  'I\'ll be better! 🤞','Fine… but I\'ll miss you 🥺',
+  'Last chance to say yes! 🌸','THE BEAR WILL CRY 🐻😭',
+  'OK fine… *sobs* 😭','Nope, still moving! 😤',
+];
+const noMessages = [
+  '😱 Wait no!!','🥺 Please reconsider…','💔 My heart!!',
+  '🐻 Even the bear is sad!','🌸 Think of the flowers…',
+  '😭 I\'m crying rn','💕 Remember the good times?',
+  '🌙 Late night talks tho?','🤗 Remember my hugs?','😿 Nooo!!',
+];
+const bearFaces = ['🥺','😭','😢','🐻','💔','🥺','😩','😿','🤞','🙏'];
+const questionVariants = [
+  ['Will you give me<br>another chance?',   'think carefully… 🌸'],
+  ['Please come back<br>to me?',            'I miss you so much 🥺'],
+  ['Can we fix this<br>together?',          'I know we can 💕'],
+  ['Don\'t you miss<br>us too?',            'you do, I know it 🌸'],
+  ['Give love<br>another chance?',          'it\'s worth it, I promise 💝'],
+  ['We\'re better<br>together, right?',     'right? right?? 🥺'],
+];
+
+function safeNoBtnPos(touchX, touchY) {
+  const btn = document.getElementById('noBtn');
+  const bw  = btn.offsetWidth  || 130;
+  const bh  = btn.offsetHeight || 50;
+
+  // Safe screen margins
+  const minX = 18;
+  const maxX = window.innerWidth - bw - 18;
+  const minY = 70; // safe from top header
+  const maxY = window.innerHeight - bh - 85; // safe from bottom navigation/dots
+
+  const yesBtn = document.getElementById('yesBtn');
+  const yRect = yesBtn ? yesBtn.getBoundingClientRect() : null;
+
+  let bestX = minX, bestY = minY;
+  let maxDist = -1;
+
+  // Attempt up to 25 candidate spots to find one far away from current touch and Yes button
+  for (let i = 0; i < 25; i++) {
+    const rx = minX + Math.random() * Math.max(10, maxX - minX);
+    const ry = minY + Math.random() * Math.max(10, maxY - minY);
+
+    // Avoid area over Yes button
+    if (yRect) {
+      if (rx + bw > yRect.left - 20 && rx < yRect.right + 20 &&
+          ry + bh > yRect.top - 20 && ry < yRect.bottom + 20) {
+        continue;
+      }
+    }
+
+    // Measure distance from current finger touch or mouse
+    if (touchX !== undefined && touchY !== undefined) {
+      const dist = Math.hypot(rx + bw/2 - touchX, ry + bh/2 - touchY);
+      if (dist > maxDist) {
+        maxDist = dist;
+        bestX = rx;
+        bestY = ry;
+      }
+    } else {
+      bestX = rx;
+      bestY = ry;
+      break;
+    }
+  }
+
+  return { x: Math.round(bestX), y: Math.round(bestY) };
+}
+
+function escapeNo(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  noAttempts++;
+
+  // Get touch coordinate if available
+  let tx, ty;
+  if (e && e.touches && e.touches[0]) {
+    tx = e.touches[0].clientX;
+    ty = e.touches[0].clientY;
+  } else if (e && e.clientX !== undefined) {
+    tx = e.clientX;
+    ty = e.clientY;
+  }
+
+  const { x, y } = safeNoBtnPos(tx, ty);
+  const btn = document.getElementById('noBtn');
+  btn.style.left = x + 'px';
+  btn.style.top  = y + 'px';
+
+  // Update button text
+  btn.textContent = noBtnTexts[Math.min(noAttempts, noBtnTexts.length - 1)];
+
+  // Update crying bear
+  document.getElementById('bear').textContent = bearFaces[Math.min(noAttempts - 1, bearFaces.length - 1)];
+
+  // Update question variants
+  const qi = Math.min(Math.floor(noAttempts / 2), questionVariants.length - 1);
+  document.getElementById('questionTitle').innerHTML = questionVariants[qi][0];
+  document.getElementById('questionSub').textContent = questionVariants[qi][1];
+
+  // Pop-up funny guilt text
+  showNoMessage();
+
+  if (noAttempts > 1) {
+    document.getElementById('noCounter').textContent = `You've tried clicking 'No' ${noAttempts} times… 😅`;
+  }
+}
+
+function resetNoBtn() {
+  noAttempts = 0;
+  const btn = document.getElementById('noBtn');
+  btn.textContent = noBtnTexts[0];
+
+  // Position nicely below the Yes button initially
+  const yesWrap = document.getElementById('yesBtnWrap');
+  if (yesWrap) {
+    const r = yesWrap.getBoundingClientRect();
+    btn.style.left = Math.round(Math.max(20, (window.innerWidth - 130) / 2)) + 'px';
+    btn.style.top  = Math.round(Math.min(window.innerHeight - 150, r.bottom + 45)) + 'px';
+  } else {
+    btn.style.left = '50%';
+    btn.style.top  = '65%';
+  }
+
+  document.getElementById('noCounter').textContent = '';
+  document.getElementById('questionTitle').innerHTML = questionVariants[0][0];
+  document.getElementById('questionSub').textContent   = questionVariants[0][1];
+  document.getElementById('bear').textContent = '🥺';
+}
+
+function showNoMessage() {
+  const msg = document.createElement('div');
+  msg.className = 'no-attempt-msg';
+  msg.textContent = noMessages[Math.floor(Math.random() * noMessages.length)];
+  const mw = 200, mh = 50, m = 16;
+  msg.style.left = (m + Math.random() * (window.innerWidth  - mw - m * 2)) + 'px';
+  msg.style.top  = (m + 60 + Math.random() * (window.innerHeight - mh - 140)) + 'px';
+  document.body.appendChild(msg);
+  setTimeout(() => { msg.style.opacity = '0'; }, 1400);
+  setTimeout(() => msg.remove(), 1900);
+}
+
+// Bind all touch & pointer events to guarantee No button runs away before tap can register!
+const noBtn = document.getElementById('noBtn');
+noBtn.addEventListener('touchstart',  escapeNo, { passive: false });
+noBtn.addEventListener('touchmove',   escapeNo, { passive: false });
+noBtn.addEventListener('pointerdown', escapeNo, { passive: false });
+noBtn.addEventListener('mouseover',   escapeNo);
+noBtn.addEventListener('click',       escapeNo);
+
+/* ════════════════════════════════════════
+   YES BUTTON CLICK -> SEND NOTIFICATION -> PAGE 8 (FINAL)
+════════════════════════════════════════ */
+function handleYes() {
+  createRipple(window.innerWidth / 2, window.innerHeight / 2);
+
+  // Send instant notification to Suyash
+  sendYesNotification();
+
+  launchConfetti();
+  setTimeout(() => goTo(8), 300);
+}
+
+/* ════════════════════════════════════════
+   CONFETTI CANNON
+════════════════════════════════════════ */
+function launchConfetti() {
+  const CE = ['🎉','🎊','💕','🌸','✨','💖','🎀','🌈','🦋','⭐','🎀','💝'];
+  for (let i = 0; i < 65; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.style.cssText = `position:fixed;font-size:${16+Math.random()*20}px;left:${Math.random()*100}vw;top:-40px;pointer-events:none;z-index:9999;animation:confettiFall ${1.4+Math.random()*2}s linear forwards;`;
+      c.textContent = CE[Math.floor(Math.random() * CE.length)];
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i * 55);
+  }
+}
+
+function celebrateYes() {
+  launchConfetti();
+  setTimeout(() => {
+    const f = document.getElementById('loveFill');
+    if (f) f.style.width = '100%';
+  }, 300);
+}
+
+/* ════════════════════════════════════════
+   INITIALIZE ON LOAD
+════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  resetNoBtn();
+});
+</script>
+</body>
+</html>
